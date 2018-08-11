@@ -1,10 +1,13 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { Howl } from 'howler';
 import * as moment from 'moment';
 
-import { SpotifyService } from './spotify.service';
 import { CountdownComponent } from 'ngx-countdown';
+import { SpotifyService } from '@services/spotify.service';
+import { UserService } from '@services/user.service';
 
 export interface Tile {
   color: string;
@@ -51,20 +54,23 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private userService: UserService,
   ) {}
 
   async ngOnInit() {
     try {
-      const res = await this.spotifyService.getSong();
-      this.previewUrl = res['preview_url'];
-      const sound = new Howl({
-        src: [this.previewUrl],
-        html5: true
-      });
+      const res = await this.userService.getPlaylists();
 
-      this.prepareGuessArray(res);
-      this.counter.begin();
+      // const res = await this.spotifyService.getSong();
+      // this.previewUrl = res['preview_url'];
+      // const sound = new Howl({
+      //   src: [this.previewUrl],
+      //   html5: true
+      // });
+
+      // this.prepareGuessArray(res);
+      // this.counter.begin();
 
       // sound.play();
     } catch (error) {
