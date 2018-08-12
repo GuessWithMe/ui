@@ -8,7 +8,8 @@ export class AuthService {
     private http: HttpClient
   ) {}
 
-  getSong() {
-    return this.http.get(environment.apiUrl).toPromise();
+
+  public authWithSpotify() {
+    return this.http.get(`${environment.apiUrl}/auth/spotify`).toPromise();
   }
 }

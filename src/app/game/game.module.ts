@@ -1,0 +1,26 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CountdownModule } from 'ngx-countdown';
+
+import { GameComponent } from './game.component';
+import { GameRoutingModule } from './game-routing.module';
+import { MaterialImportsModule } from './../material-imports.module';
+
+@NgModule({
+  declarations: [
+    GameComponent
+  ],
+  imports: [
+    CommonModule,
+    GameRoutingModule,
+    MaterialImportsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CountdownModule,
+  ],
+  providers: [
+
+  ],
+})
+export class GameModule { }

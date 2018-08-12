@@ -17,6 +17,7 @@ import { UserService } from '@services/user.service';
 
 import { AuthModule } from './auth/auth.module';
 import { AppRoutingModule } from './app-routing.module';
+import { GameModule } from './game/game.module';
 
 
 
@@ -36,7 +37,8 @@ import { AppRoutingModule } from './app-routing.module';
     HttpClientModule,
     MaterialImportsModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    GameModule,
   ],
   providers: [
     HttpClient,
