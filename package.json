@@ -26,6 +26,7 @@
     "@angular/router": "^6.0.9",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
+    "hover.css": "^2.3.2",
     "howler": "^2.0.14",
     "moment": "^2.22.2",
     "ng-cli-pug-loader": "^0.1.3",
