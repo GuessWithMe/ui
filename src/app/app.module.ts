@@ -1,10 +1,6 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { CountdownModule } from 'ngx-countdown';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { MaterialImportsModule } from './material-imports.module';
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -20,8 +16,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { GameModule } from './game/game.module';
 
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,14 +23,9 @@ import { GameModule } from './game/game.module';
   ],
   imports: [
     AuthModule,
-    BrowserAnimationsModule,
     BrowserModule,
-    CountdownModule,
-    FlexLayoutModule,
-    FormsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    MaterialImportsModule,
-    ReactiveFormsModule,
     AppRoutingModule,
     GameModule,
   ],

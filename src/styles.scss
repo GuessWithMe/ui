@@ -5,6 +5,9 @@
 // Skeleton imports
 @import url('./styles/normalize.css');
 @import url('./styles/skeleton.css');
+@import "hover.css/scss/hover.scss";
+@import url('./styles/variables.scss');
+
 
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 

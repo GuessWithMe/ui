@@ -1,3 +1,8 @@
-.container
+.background
+
+.button-container
   .row
-    a(mat-button, href="http://localhost:3000/auth/spotify") Auth with spotify
+    a.button-circle.hvr-grow(href="{{apiUrl}}/auth/spotify")
+      h1 Login with
+      .spotify-icon
+        img(src="/assets/images/spotify.svg")
