@@ -11,9 +11,10 @@ import { Interceptor } from '@services/interceptor';
 import { SpotifyService } from '@services/spotify.service';
 import { UserService } from '@services/user.service';
 
-import { AuthModule } from './auth/auth.module';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthModule } from './auth/auth.module';
 import { GameModule } from './game/game.module';
+import { MaterialImportsModule } from './material-imports.module';
 
 
 @NgModule({
@@ -22,12 +23,13 @@ import { GameModule } from './game/game.module';
     PlaylistsComponent
   ],
   imports: [
-    AuthModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
     AppRoutingModule,
+    AuthModule,
+    BrowserAnimationsModule,
+    BrowserModule,
     GameModule,
+    HttpClientModule,
+    MaterialImportsModule
   ],
   providers: [
     HttpClient,

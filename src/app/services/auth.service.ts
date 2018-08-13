@@ -12,4 +12,9 @@ export class AuthService {
   public authWithSpotify() {
     return this.http.get(`${environment.apiUrl}/auth/spotify`).toPromise();
   }
+
+
+  public logOut() {
+    return this.http.get(`${environment.apiUrl}/auth/logout`).toPromise();
+  }
 }

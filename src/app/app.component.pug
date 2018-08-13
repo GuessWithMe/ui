@@ -1,1 +1,7 @@
+mat-toolbar
+  .container.d-flex.justify-content-end
+    button(mat-button, [matMenuTriggerFor]="menu") Menu
+    mat-menu(#menu="matMenu")
+      button(mat-menu-item, (click)="logOut()") Logout
+
 router-outlet
