@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { PlaylistsComponent } from './playlists/playlists.component';
 
 import { Interceptor } from '@services/interceptor';
+import { PlaylistService } from '@services/playlist.service';
 import { SpotifyService } from '@services/spotify.service';
 import { UserService } from '@services/user.service';
 
@@ -33,6 +34,7 @@ import { MaterialImportsModule } from './material-imports.module';
   ],
   providers: [
     HttpClient,
+    PlaylistService,
     SpotifyService,
     UserService,
     {
