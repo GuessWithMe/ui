@@ -60,7 +60,7 @@ export class GameComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      const res = await this.userService.getPlaylists();
+      // const res = await this.userService.getPlaylists();
 
       // const res = await this.spotifyService.getSong();
       // this.previewUrl = res['preview_url'];
