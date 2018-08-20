@@ -1,10 +1,13 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as socketIo from 'socket.io-client';
+
 
 import { Howl } from 'howler';
 import * as moment from 'moment';
 
+import { environment } from '../../environments/environment';
 import { CountdownComponent } from 'ngx-countdown';
 import { SpotifyService } from '@services/spotify.service';
 import { UserService } from '@services/user.service';
@@ -48,6 +51,8 @@ export class GameComponent implements OnInit {
     demand: true,
   };
 
+  public socket;
+
   public guessAttemptForm = new FormGroup({
     currentGuess: new FormControl(''),
   });
@@ -59,6 +64,30 @@ export class GameComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.socket = socketIo(environment.socketUrl);
+    this.socket.on('event', data => {
+      // console.log('received event');
+      console.log('event received', data);
+    });
+
+    this.socket.on('disconnect', data => {
+      // console.log('disconnect');
+    });
+
+    this.socket.on('connect', data => {
+      console.log('connect');
+    });
+
+    this.socket.on('broadcast', data => {
+      console.log('broadcast');
+    });
+
+    this.socket.emit('message', {
+      text: 'sanaca'
+    });
+
+
+
     try {
       // const res = await this.userService.getPlaylists();
 
