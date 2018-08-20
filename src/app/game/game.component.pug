@@ -32,7 +32,8 @@
 
       div
         countdown#countdown(
-          [config]="countdownConfig"
+          [config]="countdownConfig",
+          (finished)="onFinished()"
         )
 
 router-outlet

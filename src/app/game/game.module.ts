@@ -6,6 +6,7 @@ import { CountdownModule } from 'ngx-countdown';
 import { GameComponent } from './game.component';
 import { GameRoutingModule } from './game-routing.module';
 import { MaterialImportsModule } from './../material-imports.module';
+import { GameService } from '@services/game.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { MaterialImportsModule } from './../material-imports.module';
     CountdownModule,
   ],
   providers: [
-
+    GameService
   ],
 })
 export class GameModule { }

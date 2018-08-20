@@ -1,23 +1,16 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as socketIo from 'socket.io-client';
-
 
 import { Howl } from 'howler';
 import * as moment from 'moment';
 
 import { environment } from '../../environments/environment';
 import { CountdownComponent } from 'ngx-countdown';
-import { SpotifyService } from '@services/spotify.service';
 import { UserService } from '@services/user.service';
+import { GameService } from '@services/game.service';
 
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
 
 export interface Word {
   word: string;
@@ -35,7 +28,7 @@ export interface Guess {
   templateUrl: './game.component.pug',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   @ViewChild(CountdownComponent) counter: CountdownComponent;
   title = 'app';
   previewUrl;
@@ -51,6 +44,8 @@ export class GameComponent implements OnInit {
     demand: true,
   };
 
+  public sound;
+
   public socket;
 
   public guessAttemptForm = new FormGroup({
@@ -59,15 +54,54 @@ export class GameComponent implements OnInit {
 
 
   constructor(
-    private spotifyService: SpotifyService,
     private userService: UserService,
+    private gameService: GameService,
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.initiateSockets();
+
+    this.gameService.song.subscribe(song => {
+      if (this.sound) {
+        this.sound.stop();
+      }
+
+      if (!song) {
+        return;
+      }
+
+      this.prepareGuessArray(song);
+
+      this.sound = new Howl({
+        src: [song.previewUrl],
+        html5: true
+      });
+
+      setTimeout(() => {
+        this.counter.restart();
+        this.counter.begin();
+        this.sound.play();
+      });
+    });
+  }
+
+
+  ngOnDestroy() {
+    this.counter.stop();
+    this.sound.stop();
+  }
+
+
+  private initiateSockets() {
     this.socket = socketIo(environment.socketUrl);
-    this.socket.on('event', data => {
-      // console.log('received event');
-      console.log('event received', data);
+    this.socket.on('song', song => {
+      console.log('song');
+      this.gameService.setCurrentSong(song);
+    });
+
+    this.socket.on('pause', () => {
+      console.log('pause');
+      this.gameService.setCurrentSong(null);
     });
 
     this.socket.on('disconnect', data => {
@@ -81,34 +115,17 @@ export class GameComponent implements OnInit {
     this.socket.on('broadcast', data => {
       console.log('broadcast');
     });
-
-    this.socket.emit('message', {
-      text: 'sanaca'
-    });
+  }
 
 
-
-    try {
-      // const res = await this.userService.getPlaylists();
-
-      // const res = await this.spotifyService.getSong();
-      // this.previewUrl = res['preview_url'];
-      // const sound = new Howl({
-      //   src: [this.previewUrl],
-      //   html5: true
-      // });
-
-      // this.prepareGuessArray(res);
-      // this.counter.begin();
-
-      // sound.play();
-    } catch (error) {
-      console.log(error);
-    }
+  public onFinished() {
+    this.sound.stop();
+    // setTimeout(() => this.counter.restart());
   }
 
 
   private prepareGuessArray(songData: object) {
+
     this.guess = {
       artist: [],
       title: [],
