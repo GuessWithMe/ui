@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as socketIo from 'socket.io-client';
+import FuzzySet from 'fuzzyset.js';
 
 import { Howl } from 'howler';
 import * as moment from 'moment';
@@ -177,7 +178,11 @@ export class GameComponent implements OnInit, OnDestroy {
       this.guess.artist.map(guessWord => {
         // No need to check if word already guessed
         if (!guessWord.correct) {
-          if (guessWord.word.toLowerCase() === inputWord.toLowerCase()) {
+          const fuzzyset = FuzzySet();
+          fuzzyset.add(guessWord.word.toLowerCase());
+          const match = fuzzyset.get(inputWord.toLowerCase());
+
+          if (match && match[0][0] > 0.74) {
             somethingWasCorrect = true;
             guessWord.correct = true;
           }
@@ -189,7 +194,11 @@ export class GameComponent implements OnInit, OnDestroy {
       this.guess.title.map(guessWord => {
         // No need to check if word already guessed
         if (!guessWord.correct) {
-          if (guessWord.word.toLowerCase() === inputWord.toLowerCase()) {
+          const fuzzyset = FuzzySet();
+          fuzzyset.add(guessWord.word.toLowerCase());
+          const match = fuzzyset.get(inputWord.toLowerCase());
+
+          if (match && match[0][0] > 0.64) {
             somethingWasCorrect = true;
             guessWord.correct = true;
           }
