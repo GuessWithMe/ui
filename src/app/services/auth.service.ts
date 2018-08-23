@@ -14,6 +14,11 @@ export class AuthService {
   }
 
 
+  public checkIfAuthed() {
+    return this.http.get(`${environment.apiUrl}/auth/check`).toPromise();
+  }
+
+
   public logOut() {
     return this.http.get(`${environment.apiUrl}/auth/logout`).toPromise();
   }
