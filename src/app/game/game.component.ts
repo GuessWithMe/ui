@@ -113,35 +113,38 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   private prepareGuessArray(songData: object) {
-
     this.guess = {
       artist: [],
       title: [],
       correct: false
     };
 
-    for (const word of songData['artists'][0]['name'].split(' ')) {
+    const artistStripped = this.removeParentheses(songData['artists'][0]['name']);
+    for (const word of artistStripped.split(' ')) {
+      const cleanWord = this.cleanUpWord(word);
       const guessWord: Word = {
-        word,
+        word: cleanWord,
         correct: false
       };
 
       this.guess.artist.push(guessWord);
     }
 
-    for (const word of songData['name'].split(' ')) {
+    const titleStripped = this.removeParentheses(songData['name']);
+    for (const word of titleStripped.split(' ')) {
+      const cleanWord = this.cleanUpWord(word);
       const guessWord: Word = {
-        word,
+        word: cleanWord,
         correct: false
       };
       this.guess.title.push(guessWord);
     }
+
+    console.log(this.guess);
   }
 
 
   public processIncomingSong(song): void {
-    console.log(song);
-
     if (this.sound) {
       this.sound.stop();
     }
@@ -228,6 +231,22 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public timesUp() {
     console.log('timesUp');
+  }
+
+
+  public cleanUpWord(word): string {
+    // Turn accented chars into normal chars.
+    word = word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // Removing special chars and leaving only numbers, letters
+    word = word.replace(/[^A-Za-z0-9\s]/g, '');
+
+    return word;
+  }
+
+
+  public removeParentheses(setOfWords: string): string {
+    return setOfWords.replace(/ *\([^)]*\) */g, '');
   }
 }
 
