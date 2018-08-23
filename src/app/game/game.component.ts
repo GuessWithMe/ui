@@ -58,37 +58,25 @@ export class GameComponent implements OnInit, OnDestroy {
     private gameService: GameService,
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initiateSockets();
 
+    // Getting the current song upon starting the game.
+    const res = await this.gameService.getSongFromServer();
+    this.processIncomingSong(res);
+
     this.gameService.song.subscribe(song => {
-      if (this.sound) {
-        this.sound.stop();
-      }
-
-      if (!song) {
-        return;
-      }
-
-      this.prepareGuessArray(song);
-
-      this.sound = new Howl({
-        src: [song.previewUrl],
-        html5: true
-      });
-
-      setTimeout(() => {
-        this.counter.restart();
-        this.counter.begin();
-        this.sound.play();
-      });
+      this.processIncomingSong(song);
     });
   }
 
 
   ngOnDestroy() {
     this.counter.stop();
-    this.sound.stop();
+
+    if (this.sound) {
+      this.sound.stop();
+    }
   }
 
 
@@ -148,6 +136,32 @@ export class GameComponent implements OnInit, OnDestroy {
       };
       this.guess.title.push(guessWord);
     }
+  }
+
+
+  public processIncomingSong(song): void {
+    console.log(song);
+
+    if (this.sound) {
+      this.sound.stop();
+    }
+
+    if (!song) {
+      return;
+    }
+
+    this.prepareGuessArray(song);
+
+    this.sound = new Howl({
+      src: [song.previewUrl],
+      html5: true
+    });
+
+    setTimeout(() => {
+      this.counter.restart();
+      this.counter.begin();
+      this.sound.play();
+    });
   }
 
 
