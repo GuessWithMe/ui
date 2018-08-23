@@ -73,7 +73,8 @@ import 'core-js/es7/reflect';
  */
 import 'zone.js/dist/zone';  // Included with Angular CLI.
 
-
+// https://stackoverflow.com/questions/50373966/global-is-not-defined-at-node-modules-socket-io-parser-is-buffer-js
+(window as any).global = window;
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
