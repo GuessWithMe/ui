@@ -36,12 +36,7 @@
           (finished)="onFinished()"
         )
 
-    .four.columns
-      table.mat-elevation-z8(mat-table='', [dataSource]='activePlayers')
-        ng-container(matColumnDef='username')
-          th(mat-header-cell='', *matHeaderCellDef='')  Username
-          td(mat-cell='', *matCellDef='let element')  {{ element.spotifyUsername }}
-        tr(mat-header-row='', *matHeaderRowDef='displayedColumns')
-        tr(mat-row='', *matRowDef='let row; columns: displayedColumns;')
+    .four.columns()
+      app-active-players([activePlayers]="activePlayers")
 
 router-outlet

@@ -33,7 +33,6 @@ export class GameComponent implements OnInit, OnDestroy {
   title = 'app';
   previewUrl;
 
-  public displayedColumns: string[] = ['username'];
   public guess: Guess;
   public currentGuess = '';
   public activePlayers = [];
@@ -86,6 +85,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private initiateSockets() {
     this.socket = socketIo(environment.socketUrl);
+    console.log(this.socket);
     this.socket.on('song', song => {
       this.gameService.setCurrentSong(song);
     });

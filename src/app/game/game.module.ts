@@ -4,12 +4,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CountdownModule } from 'ngx-countdown';
 
 import { GameComponent } from './game.component';
+import { ActivePlayersComponent } from './active-players/active-players.component';
+
+
 import { GameRoutingModule } from './game-routing.module';
 import { MaterialImportsModule } from './../material-imports.module';
 import { GameService } from '@services/game.service';
 
 @NgModule({
   declarations: [
+    ActivePlayersComponent,
     GameComponent
   ],
   imports: [
