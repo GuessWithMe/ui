@@ -22,4 +22,20 @@ export class GameService {
     const url = `${environment.apiUrl}/game/current-song`;
     return this.http.get(url).toPromise();
   }
+
+
+  public addUserToPlayerList(socket) {
+    const url = `${environment.apiUrl}/game/add-player`;
+    return this.http.post(url, {
+      socketId: socket.id
+    }).toPromise();
+  }
+
+
+  public removeUserFromPlayerList(socket) {
+    const url = `${environment.apiUrl}/game/remove-player`;
+    return this.http.post(url, {
+      socketId: socket.id
+    }).toPromise();
+  }
 }
