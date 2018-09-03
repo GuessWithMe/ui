@@ -18,8 +18,8 @@ export class GameService {
   }
 
 
-  public getSongFromServer() {
-    const url = `${environment.apiUrl}/game/current-song`;
+  public getStatus() {
+    const url = `${environment.apiUrl}/game/status`;
     return this.http.get(url).toPromise();
   }
 

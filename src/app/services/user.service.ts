@@ -7,4 +7,10 @@ export class UserService {
   constructor(
     private http: HttpClient
   ) {}
+
+
+  public getUser() {
+    const url = `${environment.apiUrl}/users/current`;
+    return this.http.get(url).toPromise();
+  }
 }

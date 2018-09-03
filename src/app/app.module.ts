@@ -7,10 +7,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { PlaylistsComponent } from './playlists/playlists.component';
 
-import { Interceptor } from '@services/interceptor';
-import { PlaylistService } from '@services/playlist.service';
-import { SpotifyService } from '@services/spotify.service';
-import { UserService } from '@services/user.service';
+import { Interceptor, PlaylistService, SpotifyService, UserService} from '@services';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';

@@ -9,7 +9,8 @@ import { ActivePlayersComponent } from './active-players/active-players.componen
 
 import { GameRoutingModule } from './game-routing.module';
 import { MaterialImportsModule } from './../material-imports.module';
-import { GameService } from '@services/game.service';
+import { SocketService, GameService } from '@services';
+
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { GameService } from '@services/game.service';
     CountdownModule,
   ],
   providers: [
-    GameService
+    GameService,
+    SocketService
   ],
 })
 export class GameModule { }

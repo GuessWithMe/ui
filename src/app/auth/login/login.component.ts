@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '@services/auth.service';
+import { AuthService } from '@services';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   public async authWithSpotify() {
     try {
       const res = await this.authService.authWithSpotify();
+      console.log(res);
     } catch (error) {
       console.log(error);
     }

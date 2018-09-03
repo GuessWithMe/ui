@@ -7,8 +7,7 @@ import { Howl } from 'howler';
 
 import { environment } from '../../environments/environment';
 import { CountdownComponent } from 'ngx-countdown';
-import { UserService } from '@services/user.service';
-import { GameService } from '@services/game.service';
+import { UserService, GameService, SocketService } from '@services';
 
 
 export interface Word {
@@ -19,7 +18,8 @@ export interface Word {
 export interface Guess {
   artist: Word[];
   title: Word[];
-  correct: boolean;
+  artistCorrect: boolean;
+  titleCorrect: boolean;
 }
 
 @Component({
@@ -33,9 +33,11 @@ export class GameComponent implements OnInit, OnDestroy {
   title = 'app';
   previewUrl;
 
+  public user;
   public guess: Guess;
   public currentGuess = '';
   public activePlayers = [];
+  public thisPlayer;
   public flashGreenBool = false;
   public flashRedBool = false;
   public timerEndTime;
@@ -56,15 +58,19 @@ export class GameComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private gameService: GameService,
+    private socketService: SocketService,
   ) {}
 
 
   async ngOnInit() {
+    this.user = await this.userService.getUser();
+    localStorage.setItem('user', this.user);
     this.initiateSockets();
 
     // Getting the current song upon starting the game.
-    const res = await this.gameService.getSongFromServer();
-    this.processIncomingSong(res);
+    const res = await this.gameService.getStatus();
+    console.log(res);
+    this.processIncomingSong(res['currentSong']);
 
     this.gameService.song.subscribe(song => {
       this.processIncomingSong(song);
@@ -85,7 +91,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private initiateSockets() {
     this.socket = socketIo(environment.socketUrl);
-    console.log(this.socket);
+    this.socketService.setSocket(this.socket);
     this.socket.on('song', song => {
       this.gameService.setCurrentSong(song);
     });
@@ -101,8 +107,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this.socket.on('connect', data => {
-      console.log('connect');
-      console.log(this.socket);
+      // console.log('connect');
       // On succesfull connection send a request with socket id to populate
       // active user list.
 
@@ -122,7 +127,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public onFinished() {
     this.sound.stop();
-    // setTimeout(() => this.counter.restart());
+    setTimeout(() => this.counter.restart());
   }
 
 
@@ -130,7 +135,8 @@ export class GameComponent implements OnInit, OnDestroy {
     this.guess = {
       artist: [],
       title: [],
-      correct: false
+      artistCorrect: false,
+      titleCorrect: false,
     };
 
     const artistStripped = this.removeParentheses(songData['artists'][0]['name']);
@@ -166,6 +172,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     this.prepareGuessArray(song);
+    console.log(song);
 
     this.sound = new Howl({
       src: [song.previewUrl],
@@ -173,14 +180,16 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     setTimeout(() => {
+      this.counter['left'] = 10000;
       this.counter.restart();
       this.counter.begin();
-      // this.sound.play();
+      this.sound.play();
     });
   }
 
 
   public matchGuessInput() {
+    // const initialGuessStatus = {...this.guess};
     const input = this.guessAttemptForm.value.currentGuess;
     const inputWords = input.split(' ');
     let somethingWasCorrect = false;
@@ -226,6 +235,8 @@ export class GameComponent implements OnInit, OnDestroy {
         this.flashRed();
       }
     }
+
+    this.checkIfTitleOrArtistDone();
   }
 
 
@@ -267,6 +278,56 @@ export class GameComponent implements OnInit, OnDestroy {
 
   public removeParentheses(setOfWords: string): string {
     return setOfWords.replace(/ *\([^)]*\) */g, '');
+  }
+
+
+  private checkIfTitleOrArtistDone() {
+    let titleIsDone = true;
+    for (const name of this.guess.title) {
+      if (!name.correct) {
+        titleIsDone = false;
+        break;
+      }
+    }
+
+    let artistIsDone = true;
+    for (const name of this.guess.artist) {
+      if (!name.correct) {
+        artistIsDone = false;
+        break;
+      }
+    }
+
+
+    let needsProgressUpdate = false;
+    if (this.guess.artistCorrect !== artistIsDone) {
+      this.guess.artistCorrect = artistIsDone;
+      needsProgressUpdate = true;
+    }
+
+    if (this.guess.titleCorrect !== titleIsDone) {
+      this.guess.titleCorrect = titleIsDone;
+      needsProgressUpdate = true;
+    }
+
+
+    if (needsProgressUpdate) {
+      this.sendProgressUpdateToOtherPlayers();
+    }
+  }
+
+
+  private sendProgressUpdateToOtherPlayers() {
+    try {
+      this.socket.emit('guessProgressUpdate', {
+        userId: this.user.id,
+        spotifyUsername: this.user.spotifyUsername,
+        titleCorrect: this.guess.titleCorrect,
+        artistCorrect: this.guess.artistCorrect,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
