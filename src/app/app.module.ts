@@ -27,7 +27,7 @@ import { MaterialImportsModule } from './material-imports.module';
     BrowserModule,
     GameModule,
     HttpClientModule,
-    MaterialImportsModule
+    MaterialImportsModule,
   ],
   providers: [
     HttpClient,

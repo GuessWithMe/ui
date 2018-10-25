@@ -6,7 +6,6 @@ import FuzzySet from 'fuzzyset.js';
 import { Howl } from 'howler';
 
 import { environment } from '../../environments/environment';
-import { CountdownComponent } from 'ngx-countdown';
 import { UserService, GameService, SocketService } from '@services';
 
 
@@ -28,8 +27,6 @@ export interface Guess {
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, OnDestroy {
-  @ViewChild(CountdownComponent) counter: CountdownComponent;
-
   title = 'app';
   previewUrl;
 
@@ -40,12 +37,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public thisPlayer;
   public flashGreenBool = false;
   public flashRedBool = false;
-  public timerEndTime;
-  public countdownConfig = {
-    template: '$!h!:$!m!:$!s!',
-    leftTime: 30,
-    demand: true,
-  };
+  public timeLeft = 30;
 
   public sound;
   public socket;
@@ -69,19 +61,23 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // Getting the current song upon starting the game.
     const res = await this.gameService.getStatus();
-    console.log(res);
+    this.timeLeft = res['timeLeft'];
     this.processIncomingSong(res['currentSong']);
 
     this.gameService.song.subscribe(song => {
       this.processIncomingSong(song);
     });
+
+    setInterval(() => {
+      if (this.timeLeft > 0 ) {
+        this.timeLeft = this.timeLeft - 1;
+      }
+    }, 1000);
   }
 
 
   ngOnDestroy() {
     this.gameService.removeUserFromPlayerList(this.socket);
-
-    this.counter.stop();
 
     if (this.sound) {
       this.sound.stop();
@@ -99,6 +95,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.socket.on('pause', () => {
       // console.log('pause');
       this.gameService.setCurrentSong(null);
+      this.timeLeft = 0;
     });
 
     this.socket.on('disconnect', data => {
@@ -122,12 +119,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.socket.on('activePlayers', activePlayers => {
       this.activePlayers = activePlayers;
     });
-  }
-
-
-  public onFinished() {
-    this.sound.stop();
-    setTimeout(() => this.counter.restart());
   }
 
 
@@ -159,6 +150,9 @@ export class GameComponent implements OnInit, OnDestroy {
       };
       this.guess.title.push(guessWord);
     }
+
+    console.log(this.guess.artist);
+    console.log(this.guess.title);
   }
 
 
@@ -172,24 +166,18 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     this.prepareGuessArray(song);
-    console.log(song);
 
     this.sound = new Howl({
       src: [song.previewUrl],
       html5: true
     });
 
-    setTimeout(() => {
-      this.counter['left'] = 10000;
-      this.counter.restart();
-      this.counter.begin();
-      this.sound.play();
-    });
+    this.timeLeft = 30;
+    this.sound.play();
   }
 
 
   public matchGuessInput() {
-    // const initialGuessStatus = {...this.guess};
     const input = this.guessAttemptForm.value.currentGuess;
     const inputWords = input.split(' ');
     let somethingWasCorrect = false;
@@ -329,5 +317,6 @@ export class GameComponent implements OnInit, OnDestroy {
       console.log(error);
     }
   }
+
 }
 

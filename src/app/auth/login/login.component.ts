@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
   public async authWithSpotify() {
     try {
       const res = await this.authService.authWithSpotify();
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

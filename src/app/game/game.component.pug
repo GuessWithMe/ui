@@ -2,6 +2,9 @@
   .row
     .one.column
     .seven.columns
+      .timer
+        h3 {{ timeLeft }}
+
       .guess-container(*ngIf="guess")
         div.artist
           div.word-container(*ngFor='let guessWord of guess.artist')
@@ -30,11 +33,6 @@
         mat-icon.wrong([class.flashed]="flashRedBool==true") clear
         mat-icon.correct([class.flashed]="flashGreenBool==true")  done
 
-      div
-        countdown#countdown(
-          [config]="countdownConfig",
-          (finished)="onFinished()"
-        )
 
     .four.columns()
       app-active-players([activePlayers]="activePlayers")
