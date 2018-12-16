@@ -1,4 +1,5 @@
-// shipitfile.js
+const path = require('path');
+
 module.exports = shipit => {
   // Load shipit-deploy tasks
   require('shipit-deploy')(shipit)
@@ -6,10 +7,9 @@ module.exports = shipit => {
   shipit.initConfig({
     default: {
       workspace: './dist',
-      deployTo: '/var/www/shipit',
-      repositoryUrl: 'https://github.com/GuessWithMe/ui.git',
+      deployTo: '/home/ubuntu/ui',
       ignores: ['.git', 'node_modules'],
-      key: '~/.ssh/guesswithme-aws.pem'
+      key: '~/.ssh/guesswithme-aws.pem',
     },
     // Set custom Variables
     production: {
@@ -18,14 +18,38 @@ module.exports = shipit => {
     }
   });
 
+
   shipit.task('default', () => {
     return shipit.local(shipit.config.build)
   });
 
-  // shipit.task('sync',['default'], () => {
-  //   shipit.log('Build:Finished')
-  //   return shipit.local('rsync -azP ' + shipit.config.workspace + ' ' + shipit.config.servers + ':'  + shipit.config.deployTo + '/' + releaseId)
-  // });
 
-  shipit.start('default')
+  shipit.task('sync', ['default'], async () => {
+    shipit.log('Build:Finished');
+    const releaseTimestamp = +new Date();
+    const targetDir = `${shipit.config.deployTo}/${releaseTimestamp}`
+
+    // Making a directory for the new release
+    await shipit.remote(`mkdir ${targetDir}`);
+
+    // Copying new relase files
+    await shipit.copyToRemote(path.resolve('./dist/ui6/*'), targetDir)
+
+    // Removing old symlink (current)
+    await shipit.remote(`rm -rf ${shipit.config.deployTo}/current`);
+
+    // Create a symlink to the new release
+    return shipit.remote(`ln -s ${targetDir}/ ${shipit.config.deployTo}/current`);
+  });
+
+  shipit.task('cleanup', ['sync'], async () => {
+    // Getting the amount of versions + 1
+    const versionCount = await shipit.remote(`find /home/ubuntu/ui  -maxdepth 1 -type d | wc -l`);
+
+    if (Number(versionCount[0]['stdout']) > 5) {
+      await shipit.remote(`rm -R ${shipit.config.deployTo}/$(ls -lt ${shipit.config.deployTo} | grep '^d' | tail -1  | tr " " "\n" | tail -1)`)
+    }
+  });
+
+  shipit.start('default', 'sync', 'cleanup');
 }
