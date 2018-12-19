@@ -14,7 +14,7 @@ module.exports = shipit => {
     // Set custom Variables
     production: {
       servers: 'ubuntu@ec2-18-191-188-37.us-east-2.compute.amazonaws.com',
-      build : 'ng build'
+      build : 'ng build --prod'
     }
   });
 
