@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from './../../environments/environment';
+
+import { environment } from '@environment';
+import { User } from '@t';
 
 @Injectable()
 export class UserService {
@@ -8,9 +10,13 @@ export class UserService {
     private http: HttpClient
   ) {}
 
-
-  public getUser() {
+  /**
+   * Retrieves the currently authenticated user.
+   * @returns Promise<User>
+   * @memberof UserService
+   */
+  public getUser(): Promise<User> {
     const url = `${environment.apiUrl}/users/current`;
-    return this.http.get(url).toPromise();
+    return this.http.get(url).toPromise() as Promise<User>;
   }
 }

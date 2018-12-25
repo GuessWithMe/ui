@@ -1,25 +1,13 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Howl } from 'howler';
 import * as socketIo from 'socket.io-client';
 import FuzzySet from 'fuzzyset.js';
 
-import { Howl } from 'howler';
-
-import { environment } from '../../environments/environment';
+import { environment } from '@environment';
 import { UserService, GameService, SocketService } from '@services';
+import { User, Guess, Word } from '@t';
 
-
-export interface Word {
-  word: string;
-  correct: boolean;
-}
-
-export interface Guess {
-  artist: Word[];
-  title: Word[];
-  artistCorrect: boolean;
-  titleCorrect: boolean;
-}
 
 @Component({
   selector: 'app-game',
@@ -27,20 +15,15 @@ export interface Guess {
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, OnDestroy {
-  title = 'app';
-  previewUrl;
-
-  public user;
-  public guess: Guess;
-  public currentGuess = '';
   public activePlayers = [];
-  public thisPlayer;
+  public currentGuess = '';
   public flashGreenBool = false;
   public flashRedBool = false;
+  public guess: Guess;
+  public socket: SocketIOClient.Socket;
+  public sound: Howl;
   public timeLeft = 30;
-
-  public sound;
-  public socket;
+  public user: User;
 
   public guessAttemptForm = new FormGroup({
     currentGuess: new FormControl(''),
@@ -56,13 +39,17 @@ export class GameComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.user = await this.userService.getUser();
-    localStorage.setItem('user', this.user);
+    localStorage.setItem('user', JSON.stringify(this.user));
+
     this.initiateSockets();
 
     // Getting the current song upon starting the game.
     const res = await this.gameService.getStatus();
-    this.timeLeft = res['timeLeft'];
-    this.processIncomingSong(res['currentSong']);
+
+    this.activePlayers = res['activePlayers'];
+
+    this.timeLeft = res['status']['timeLeft'];
+    this.processIncomingSong(res['status']['currentSong']);
 
     this.gameService.song.subscribe(song => {
       this.processIncomingSong(song);
@@ -77,48 +64,52 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+    this.socketService.setSocket(null);
     this.gameService.removeUserFromPlayerList(this.socket);
 
     if (this.sound) {
       this.sound.stop();
     }
-  }
+}
 
 
   private initiateSockets() {
+    this.socket = this.socketService.getSocket();
+
+    if (this.socket) {
+      return;
+    }
+
     this.socket = socketIo(environment.socketUrl);
-    this.socketService.setSocket(this.socket);
     this.socket.on('song', song => {
       this.gameService.setCurrentSong(song);
     });
 
     this.socket.on('pause', () => {
-      // console.log('pause');
       this.gameService.setCurrentSong(null);
       this.timeLeft = 0;
     });
 
     this.socket.on('disconnect', data => {
-      console.log('disconnect');
       // this.gameService.removeUserFromPlayerList(this.socket);
     });
 
     this.socket.on('connect', data => {
-      // console.log('connect');
       // On succesfull connection send a request with socket id to populate
       // active user list.
-
       this.gameService.addUserToPlayerList(this.socket);
     });
 
     this.socket.on('broadcast', data => {
-      // console.log('broadcast');
+
     });
 
 
     this.socket.on('activePlayers', activePlayers => {
       this.activePlayers = activePlayers;
     });
+
+    this.socketService.setSocket(this.socket);
   }
 
 
@@ -150,9 +141,6 @@ export class GameComponent implements OnInit, OnDestroy {
       };
       this.guess.title.push(guessWord);
     }
-
-    console.log(this.guess.artist);
-    console.log(this.guess.title);
   }
 
 
@@ -248,9 +236,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
 
-  public timesUp() {
-    console.log('timesUp');
-  }
+  public timesUp() {}
 
 
   public cleanUpWord(word): string {

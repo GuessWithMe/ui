@@ -17,7 +17,9 @@
       "dom"
     ],
     "paths": {
-      "@services": ["./src/app/services"]
+      "@services": ["./src/app/services"],
+      "@t": ["./src/types"],
+      "@environment": ["./src/environments/environment"]
     }
   }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { environment } from './../../environments/environment';
 
 @Injectable()
 export class SocketService {
@@ -15,5 +14,10 @@ export class SocketService {
 
   public setSocket(socket) {
     this.socketSource.next(socket);
+  }
+
+
+  public getSocket(): any {
+    return this.socketSource.value;
   }
 }
