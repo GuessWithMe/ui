@@ -1,9 +1,8 @@
 .container
   .row
-    .one.column
-    .seven.columns
+    .col-md-7
       .timer
-        h3 {{ timeLeft }}
+        h3.m-0 {{ timeLeft }}
 
       .guess-container(*ngIf="guess")
         div.artist
@@ -34,7 +33,7 @@
         mat-icon.correct([class.flashed]="flashGreenBool==true")  done
 
 
-    .four.columns()
+    .col-md-5.mt-5
       app-active-players([activePlayers]="activePlayers")
 
 router-outlet
