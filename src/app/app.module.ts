@@ -5,28 +5,26 @@ import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { PlaylistsComponent } from './playlists/playlists.component';
 
 import { Interceptor, PlaylistService, SpotifyService, UserService} from '@services';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
-import { GameModule } from './game/game.module';
+import { LandingModule } from './landing/landing.module';
 import { MaterialImportsModule } from './material-imports.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlaylistsComponent
   ],
   imports: [
     AppRoutingModule,
     AuthModule,
     BrowserAnimationsModule,
     BrowserModule,
-    GameModule,
     HttpClientModule,
+    LandingModule,
     MaterialImportsModule,
   ],
   providers: [

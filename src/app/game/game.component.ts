@@ -6,7 +6,7 @@ import FuzzySet from 'fuzzyset.js';
 
 import { environment } from '@environment';
 import { UserService, GameService, SocketService } from '@services';
-import { User, Guess, Word } from '@t';
+import { User, Guess, Word, Song } from '@t';
 
 
 @Component({
@@ -24,6 +24,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public sound: Howl;
   public timeLeft = 30;
   public user: User;
+  public previousSong: Song;
 
   public guessAttemptForm = new FormGroup({
     currentGuess: new FormControl(''),
@@ -38,6 +39,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit() {
+    console.log('game');
     this.user = await this.userService.getUser();
     localStorage.setItem('user', JSON.stringify(this.user));
 
@@ -50,6 +52,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this.timeLeft = res['status']['timeLeft'];
     this.processIncomingSong(res['status']['currentSong']);
+    this.previousSong = res['status']['currentSong'];
 
     this.gameService.song.subscribe(song => {
       this.processIncomingSong(song);
@@ -70,10 +73,17 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.sound) {
       this.sound.stop();
     }
-}
+  }
 
 
-  private initiateSockets() {
+  /**
+   * Initiates webosockets for controlling the game flow, incoming songs,
+   * connecting/disconnecting players etc.
+   * @private
+   * @returns void
+   * @memberof GameComponent
+   */
+  private initiateSockets(): void {
     this.socket = this.socketService.getSocket();
 
     if (this.socket) {
@@ -85,26 +95,19 @@ export class GameComponent implements OnInit, OnDestroy {
       this.gameService.setCurrentSong(song);
     });
 
-    this.socket.on('pause', () => {
+    this.socket.on('pause', (previousSong: Song) => {
+      this.previousSong = previousSong;
       this.gameService.setCurrentSong(null);
       this.timeLeft = 0;
     });
 
-    this.socket.on('disconnect', data => {
-      // this.gameService.removeUserFromPlayerList(this.socket);
-    });
+    this.socket.on('disconnect', data => {});
 
     this.socket.on('connect', data => {
-      // On succesfull connection send a request with socket id to populate
-      // active user list.
       this.gameService.addUserToPlayerList(this.socket);
     });
 
-    this.socket.on('broadcast', data => {
-
-    });
-
-
+    this.socket.on('broadcast', data => {});
     this.socket.on('activePlayers', activePlayers => {
       this.activePlayers = activePlayers;
     });

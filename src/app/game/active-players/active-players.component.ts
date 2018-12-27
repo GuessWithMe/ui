@@ -8,7 +8,7 @@ import { GameService } from '@services';
   styleUrls: ['./active-players.component.scss']
 })
 export class ActivePlayersComponent implements OnInit {
-  @Input() activePlayers;
+  @Input() activePlayers: any;
   public displayedColumns: string[] = ['username', 'artistCorrect', 'titleCorrect'];
 
 

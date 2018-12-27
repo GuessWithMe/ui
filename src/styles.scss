@@ -19,3 +19,12 @@ $custom-typography: mat-typography-config($font-family: '"Open Sans", sans-serif
 * {
   font-family: 'Open Sans', sans-serif;
 }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  // background-image: url("/assets/images/blue-stripe-new.svg");
+  // background-size: cover;
+}
