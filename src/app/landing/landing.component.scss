@@ -59,7 +59,7 @@ header {
     h1 {
       color: white;
       font-weight: 100;
-
+      font-size: 1.5rem;
       margin-right: 1rem;
       text-decoration: none;
     }
@@ -96,7 +96,78 @@ header {
 
 
 section.features {
-  height: 820px;
+  padding: 4rem 0;
+  position: relative;
+  text-align: center;
+  color: white;
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#28afb0+0,30ced3+100 */
+  background: #28afb0; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #28afb0 0%, #30ced3 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, #28afb0 0%,#30ced3 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #28afb0 0%,#30ced3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#28afb0', endColorstr='#30ced3',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+  h2 {
+    font-family: 'Pacifico', cursive;
+    font-size: 50px;
+  }
+
+  > .container {
+    // margin-top: 50px;
+  }
+
+  i {
+    font-size: 5rem;
+    // color: $header-color;
+  }
+
+  .middle-line {
+    height: calc(100% - 200px);
+    width: 1px;
+    background: white;
+    position: absolute;
+    left: 50%;
+    bottom: 0px;
+  }
+
+  .feature {
+    // margin-top: -50px;
+
+    h3 {
+      text-transform: uppercase;
+    }
+
+    p {
+      line-height: 1.5;
+    }
+
+    .line {
+      position: absolute;
+      right: -93px;
+      top: 50%;
+      width: 60px;
+      height: 1px;
+      background: white;
+
+      &.right {
+        left: -90px;
+      }
+    }
+  }
+}
+
+footer {
+  background: #1e2842;
+  color: white;
+  padding: 20px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    margin: 0;
+  }
 }
 
 
@@ -122,3 +193,52 @@ section.features {
     }
   }
 }
+
+
+@media(max-width: 1200px) {
+  section.features {
+    .feature {
+      .line {
+        right: -78px;
+
+        &.right {
+          // left: unset;
+          left: -78px;
+        }
+      }
+    }
+  }
+}
+
+
+@media(max-width: 992px) {
+  section.features {
+    .feature {
+      .line {
+        right: -58px;
+
+        &.right {
+          // left: unset;
+          left: -58px;
+        }
+      }
+    }
+  }
+}
+
+@media(max-width: 768px) {
+  section.features {
+    .middle-line {
+      display: none;
+    }
+
+    .feature {
+      margin-bottom: 7rem;
+
+      .line {
+        display: none;
+      }
+    }
+  }
+}
+

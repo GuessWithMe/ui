@@ -22,4 +22,23 @@ header
         img(src="/assets/images/Spotify_Logo_CMYK_Green.png")
 
 section.features
-section
+  .container
+    h2.m-0.mb-5 Features
+
+    .row
+      .middle-line
+      .col-12(*ngFor="let feature of features; let i = index")
+        div.col-sm-12.offset-sm-0.col-md-5.offset-md-0.feature(*ngIf="i % 2 == 0")
+          .line.left
+          i.fas.mb-4(class="{{ feature.iconClass }}")
+          h3 {{ feature.heading }}
+          p {{ feature.description }}
+
+        div.feature.col-sm-12.offset-0.col-md-5.offset-md-7(*ngIf="i % 2 != 0")
+          .line.right
+          i.fas.mb-4(class="{{ feature.iconClass }}")
+          h3 {{ feature.heading }}
+          p {{ feature.description }}
+
+footer
+  p Made with  ❤️ by E.E.
