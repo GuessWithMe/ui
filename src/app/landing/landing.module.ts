@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LandingComponent } from './landing.component';
 import { LandingRoutingModule } from './landing-routing.module';
+import { MaterialImportsModule } from '../material-imports.module';
+
+import { LandingComponent } from './landing.component';
 
 
 @NgModule({
@@ -12,9 +14,8 @@ import { LandingRoutingModule } from './landing-routing.module';
   imports: [
     CommonModule,
     LandingRoutingModule,
+    MaterialImportsModule,
   ],
-  providers: [
-
-  ],
+  providers: [],
 })
-export class LandingModule { }
+export class LandingModule {}

@@ -1,34 +1,124 @@
-.button-container {
-  top: 42%;
+@import url('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+$spotify-green: #00b563;
+$header-color: #1D263B;
+
+.mat-toolbar {
+  background: none;
   position: absolute;
-  width: 100%;
-  left: 0px;
-  right: 0px;
-  text-align: center;
+  top: 0px;
 
-  a.button-circle {
-    width: 300px;
-    height: 300px;
-    margin: 0 auto;
-    border-radius: 50%;
-    background: white;
-    position: relative;
-    top: -100px;
-    border: 0px solid black;
-    box-shadow: 0px 0px 51px -11px #000000;
-    display: block;
+  h1 {
+    color: white;
+    font-family: 'Pacifico', cursive;
+  }
 
 
-    h1 {
-      position: absolute;
-      width: 450px;
+  a.mat-stroked-button {
+    box-shadow: 0px 0px 25px -5px $spotify-green !important;
+    border-color: $spotify-green !important;
+
+    img {
+      height: 24px;
+    }
+
+    p {
       color: white;
       font-weight: 100;
-      top: 131px;
-      left: -316px;
-      transform: rotate(-3deg);
-      font-size: 33px;
+
+
+      margin-right: 1rem;
+      text-decoration: none;
+    }
+
+    .mat-button-wrapper {
+      display: flex;
+      align-items: center;
     }
   }
 }
 
+
+header {
+  background: #1d263b;
+  background: -moz-linear-gradient(-45deg, #1d263b 0%, #2b3456 100%);
+  background: -webkit-linear-gradient(-45deg, #1d263b 0%,#2b3456 100%);
+  background: linear-gradient(135deg, #1d263b 0%,#2b3456 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d263b', endColorstr='#2b3456',GradientType=1 );
+
+  padding: 9rem 0rem;
+
+  a.mat-stroked-button {
+    box-shadow: 0px 0px 25px -5px $spotify-green !important;
+    border-color: $spotify-green !important;
+
+    img {
+      height: 48px;
+    }
+
+    h1 {
+      color: white;
+      font-weight: 100;
+
+      margin-right: 1rem;
+      text-decoration: none;
+    }
+
+    .mat-button-wrapper {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+
+  .heading {
+    color: white;
+    text-align: center;
+
+    h1 {
+      margin-top: 100px;
+      font-size: 100px;
+      font-family: 'Pacifico', cursive;
+    }
+
+    hr {
+      width: 61px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    h2 {
+      font-weight: lighter;
+      margin-top: -25px;
+    }
+  }
+}
+
+
+section.features {
+  height: 820px;
+}
+
+
+@media(max-width: 768px) {
+  header {
+    padding: 1rem 0rem 8rem;
+
+    .heading {
+      h1 {
+        font-size: 60px;
+      }
+    }
+
+    a.mat-stroked-button {
+      img {
+        height: 30px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
