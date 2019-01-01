@@ -48,7 +48,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // Getting the current song upon starting the game.
     const res = await this.gameService.getStatus();
-    console.log(res);
     this.activePlayers = res['activePlayers'];
 
     this.processIncomingSong(res['status']['currentSong'], res['status']['timeLeft']);
@@ -71,6 +70,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.socketService.setSocket(null);
     this.gameService.removeUserFromPlayerList(this.socket);
+    this.gameService.setCurrentSong(null);
 
     if (this.sound) {
       this.sound.stop();
@@ -94,14 +94,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this.socket = socketIo(environment.socketUrl);
     this.socket.on('song', song => {
-      console.log('onSong');
-
       this.gameService.setCurrentSong(song);
     });
 
     this.socket.on('pause', (previousSong: Song) => {
-      console.log('onPause');
-
       this.previousSong = previousSong;
       this.gameService.setCurrentSong(null);
       this.setPause();
