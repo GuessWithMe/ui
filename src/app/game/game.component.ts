@@ -15,6 +15,7 @@ import { User, Guess, Word, Song } from '@t';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, OnDestroy {
+  private timeToGuess = 30;
   public activePlayers = [];
   public currentGuess = '';
   public flashGreenBool = false;
@@ -22,9 +23,10 @@ export class GameComponent implements OnInit, OnDestroy {
   public guess: Guess;
   public socket: SocketIOClient.Socket;
   public sound: Howl;
-  public timeLeft = 30;
+  public timeLeft = this.timeToGuess;
   public user: User;
   public previousSong: Song;
+  public isPause = false;
 
   public guessAttemptForm = new FormGroup({
     currentGuess: new FormControl(''),
@@ -39,7 +41,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit() {
-    console.log('game');
     this.user = await this.userService.getUser();
     localStorage.setItem('user', JSON.stringify(this.user));
 
@@ -47,15 +48,16 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // Getting the current song upon starting the game.
     const res = await this.gameService.getStatus();
-
+    console.log(res);
     this.activePlayers = res['activePlayers'];
 
-    this.timeLeft = res['status']['timeLeft'];
-    this.processIncomingSong(res['status']['currentSong']);
-    this.previousSong = res['status']['currentSong'];
+    this.processIncomingSong(res['status']['currentSong'], res['status']['timeLeft']);
+    this.previousSong = res['status']['previousSong'];
 
     this.gameService.song.subscribe(song => {
-      this.processIncomingSong(song);
+      if (song) {
+        this.processIncomingSong(song);
+      }
     });
 
     setInterval(() => {
@@ -92,12 +94,17 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this.socket = socketIo(environment.socketUrl);
     this.socket.on('song', song => {
+      console.log('onSong');
+
       this.gameService.setCurrentSong(song);
     });
 
     this.socket.on('pause', (previousSong: Song) => {
+      console.log('onPause');
+
       this.previousSong = previousSong;
       this.gameService.setCurrentSong(null);
+      this.setPause();
       this.timeLeft = 0;
     });
 
@@ -147,7 +154,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
 
-  public processIncomingSong(song): void {
+  public processIncomingSong(song: Song, timeLeft = this.timeToGuess): void {
     if (this.sound) {
       this.sound.stop();
     }
@@ -156,6 +163,8 @@ export class GameComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isPause = false;
+
     this.prepareGuessArray(song);
 
     this.sound = new Howl({
@@ -163,7 +172,7 @@ export class GameComponent implements OnInit, OnDestroy {
       html5: true
     });
 
-    this.timeLeft = 30;
+    this.timeLeft = timeLeft;
     this.sound.play();
   }
 
@@ -307,5 +316,19 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  /**
+   * Sets a game on pause until a new song comes in.
+   *
+   * @private
+   * @memberof GameComponent
+   */
+  private setPause() {
+    this.isPause = true;
+
+    if (this.sound) {
+      this.sound.stop();
+    }
+  }
 }
 

@@ -2,9 +2,9 @@
   .row
     .col-md-6
       .timer
-        h3.m-0 {{ timeLeft }}
+        h3.m-0(*ngIf="timeLeft <= 30") {{ timeLeft }}
 
-      .guess-container(*ngIf="guess")
+      .guess-container(*ngIf="guess", [ngClass]="isPause ? 'hidden': ''")
         div.artist
           div.word-container(*ngFor='let guessWord of guess.artist')
             span(*ngIf="guessWord.correct") {{ guessWord.word }}
