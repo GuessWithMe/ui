@@ -1,11 +1,26 @@
-table {
-  width: 100%;
+.img-container {
+  display: flex;
+  align-items: center;
 
-  .mat-column-name {
-    flex: 7;
+  img {
+    border-radius: 5px;
   }
 
-  .mat-column-image {
-    flex: 1;
+  .no-image-place {
+    height: 60px;
+    width: 60px;
+    border: 2px dashed #b4b4b4;
+    border-radius: 5px;
   }
 }
+
+.mat-flat-button {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+}
+
+// .mat-card {
+//   background: #1d263b;
+//   color: white;
+// }

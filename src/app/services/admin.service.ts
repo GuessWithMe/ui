@@ -3,20 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 
 @Injectable()
-export class PlaylistService {
+export class AdminService {
   constructor(
     private http: HttpClient
   ) {}
 
 
-  async getPlaylists() {
-    const url = `${environment.apiUrl}/playlists`;
+  public truncateDatabase() {
+    const url = `${environment.apiUrl}/admin/truncate`;
     return this.http.get(url).toPromise();
-  }
-
-
-  async importPlaylist(playlist) {
-    const url = `${environment.apiUrl}/playlists/import`;
-    return this.http.post(url, { playlist }).toPromise();
   }
 }

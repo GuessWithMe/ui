@@ -3,18 +3,37 @@ import {
   HttpInterceptor,
   HttpHandler,
   HttpRequest,
+  HttpResponse,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { tap, catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class Interceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  constructor(
+    private router: Router,
+  ) {}
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): any {
     // Clone the request to add the new header
     const clonedRequest = req.clone({
       withCredentials: true,
       headers: req.headers.set('Content-Type', 'application/json')
     });
 
-    // Pass the cloned request instead of the original request to the next handle
-    return next.handle(clonedRequest);
+    return next.handle(clonedRequest).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 401) {
+            this.router.navigate(['/']);
+          }
+        }
+
+        return throwError(err);
+      })
+    );
   }
 }

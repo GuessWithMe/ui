@@ -6,10 +6,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 
-import { Interceptor, PlaylistService, SpotifyService, UserService} from '@services';
+import {
+  Interceptor, PlaylistService, SpotifyService, UserService, SocketService,
+  GameService,
+  AuthService
+} from '@services';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AuthModule } from './auth/auth.module';
 import { LandingModule } from './landing/landing.module';
 import { MaterialImportsModule } from './material-imports.module';
 
@@ -20,7 +23,6 @@ import { MaterialImportsModule } from './material-imports.module';
   ],
   imports: [
     AppRoutingModule,
-    AuthModule,
     BrowserAnimationsModule,
     BrowserModule,
     HttpClientModule,
@@ -36,7 +38,10 @@ import { MaterialImportsModule } from './material-imports.module';
       provide: HTTP_INTERCEPTORS,
       useClass: Interceptor,
       multi: true,
-    }
+    },
+    SocketService,
+    GameService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

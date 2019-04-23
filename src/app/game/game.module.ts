@@ -10,7 +10,6 @@ import { PreviousSongComponent } from './previous-song/previous-song.component';
 
 import { GameRoutingModule } from './game-routing.module';
 import { MaterialImportsModule } from 'src/app/material-imports.module';
-import { SocketService, GameService } from '@services';
 import { PlaylistsComponent } from '../playlists/playlists.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
@@ -31,9 +30,6 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
     ReactiveFormsModule,
     CountdownModule,
   ],
-  providers: [
-    GameService,
-    SocketService
-  ],
+  providers: [],
 })
 export class GameModule { }

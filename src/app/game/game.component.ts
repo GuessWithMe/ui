@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Howl } from 'howler';
+import { MatSnackBar } from '@angular/material';
 import * as socketIo from 'socket.io-client';
 import FuzzySet from 'fuzzyset.js';
 
@@ -27,6 +28,7 @@ export class GameComponent implements OnInit, OnDestroy {
   public user: User;
   public previousSong: Song;
   public isPause = false;
+  public isAutoplayDisabled = false;
 
   public guessAttemptForm = new FormGroup({
     currentGuess: new FormControl(''),
@@ -37,6 +39,7 @@ export class GameComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private gameService: GameService,
     private socketService: SocketService,
+    private snackBar: MatSnackBar,
   ) {}
 
 
@@ -64,13 +67,18 @@ export class GameComponent implements OnInit, OnDestroy {
         this.timeLeft = this.timeLeft - 1;
       }
     }, 1000);
+
+    this.processAutoplayRestrictions();
   }
 
 
   ngOnDestroy() {
-    this.socketService.setSocket(null);
-    this.gameService.removeUserFromPlayerList(this.socket);
+    // this.socketService.setSocket(null);
     this.gameService.setCurrentSong(null);
+
+    if (this.socket) {
+      // this.gameService.removeUserFromPlayerList(this.socket);
+    }
 
     if (this.sound) {
       this.sound.stop();
@@ -88,12 +96,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private initiateSockets(): void {
     this.socket = this.socketService.getSocket();
 
-    if (this.socket) {
-      return;
-    }
-
-    this.socket = socketIo(environment.socketUrl);
-    this.socket.on('song', song => {
+    this.socket.on('song', (song: any) => {
       this.gameService.setCurrentSong(song);
     });
 
@@ -104,13 +107,10 @@ export class GameComponent implements OnInit, OnDestroy {
       this.timeLeft = 0;
     });
 
-    this.socket.on('disconnect', data => {});
+    // this.socket.on('connect', data => {
+    //   this.gameService.addUserToPlayerList(this.socket);
+    // });
 
-    this.socket.on('connect', data => {
-      this.gameService.addUserToPlayerList(this.socket);
-    });
-
-    this.socket.on('broadcast', data => {});
     this.socket.on('activePlayers', activePlayers => {
       this.activePlayers = activePlayers;
     });
@@ -169,6 +169,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     this.timeLeft = timeLeft;
+
     this.sound.play();
   }
 
@@ -324,6 +325,20 @@ export class GameComponent implements OnInit, OnDestroy {
 
     if (this.sound) {
       this.sound.stop();
+    }
+  }
+
+
+  public processAutoplayRestrictions() {
+    if (this.sound && !this.sound.playing()) {
+      this.isAutoplayDisabled = true;
+      const snackBarRef = this.snackBar.open('If there\'s no sound, hit the play button!', 'Play', {
+        duration: 20000
+      });
+      snackBarRef.onAction().subscribe(() => {
+        this.sound.seek(15000);
+        this.sound.play();
+      });
     }
   }
 }

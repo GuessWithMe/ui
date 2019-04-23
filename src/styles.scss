@@ -1,20 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
-/* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
-@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i');
-
-// Skeleton imports
 @import url('./styles/normalize.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.min.css');
 @import "hover.css/scss/hover.scss";
 @import url('./styles/variables.scss');
 
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
-
-// Overriding the default fonts of angular-material.
-@import '~@angular/material/theming';
-$custom-typography: mat-typography-config($font-family: '"Open Sans", sans-serif');
-@include mat-core($custom-typography);
+@import './styles/app-theme.scss';
 
 * {
   font-family: 'Open Sans', sans-serif;
@@ -27,4 +18,5 @@ html, body {
 body {
   // background-image: url("/assets/images/blue-stripe-new.svg");
   // background-size: cover;
+  // background: #141c2d;
 }
