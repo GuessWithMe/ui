@@ -1,17 +1,18 @@
 @import url('./styles/normalize.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap-grid.min.css');
-@import "hover.css/scss/hover.scss";
+@import 'hover.css/scss/hover.scss';
 @import url('./styles/variables.scss');
 
-// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
-@import './styles/app-theme.scss';
+// @import './styles/app-theme.scss';
 
 * {
   font-family: 'Open Sans', sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 

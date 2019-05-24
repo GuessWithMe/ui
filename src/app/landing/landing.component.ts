@@ -13,7 +13,8 @@ export class LandingComponent implements OnInit {
   public features = [
     {
       heading: 'Compete with others',
-      description: 'Compete with your family, friends or complete strangers from all around the world. Show \'em who knows the most hidden gems of your favorite genres.',
+      description:
+        "Compete with your family, friends or complete strangers from all around the world. Show 'em who knows the most hidden gems of your favorite genres.",
       iconClass: 'fa-users'
     },
     {
@@ -23,7 +24,8 @@ export class LandingComponent implements OnInit {
     },
     {
       heading: 'Rooms',
-      description: 'Play with the rest of community or create private rooms for uninterrupted personal one-on-one\'s or team challenges in a group setting.',
+      description:
+        "Play with the rest of community or create private rooms for uninterrupted personal one-on-one's or team challenges in a group setting.",
       iconClass: 'fa-door-open'
     },
     {
@@ -33,15 +35,13 @@ export class LandingComponent implements OnInit {
     },
     {
       heading: 'Find your pace',
-      description: 'Is your typing speed keeping you back? It better not. Cause it matters. Compete for the fastest guess and stay on the leaderboard till someone knocks you off.',
+      description:
+        'Is your typing speed keeping you back? It better not. Cause it matters. Compete for the fastest guess and stay on the leaderboard till someone knocks you off.',
       iconClass: 'fa-stopwatch'
     }
   ];
 
   constructor() {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 }
-
