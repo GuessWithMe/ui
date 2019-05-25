@@ -12,10 +12,7 @@ import { SocketService, GameService } from '@services';
 export class GameShellComponent implements OnInit {
   public socket: SocketIOClient.Socket;
 
-  constructor(
-    private gameService: GameService,
-    private socketService: SocketService,
-  ) {}
+  constructor(private gameService: GameService, private socketService: SocketService) {}
 
   ngOnInit() {
     this.initiateSockets();
@@ -35,8 +32,8 @@ export class GameShellComponent implements OnInit {
       return;
     }
 
-    this.socket = socketIo(environment.socketUrl, {
-      transports: ['websocket'],
+    this.socket = socketIo(environment.apiUrl, {
+      transports: ['websocket']
     });
 
     this.socket.on('connect', data => {
@@ -46,10 +43,8 @@ export class GameShellComponent implements OnInit {
 
     this.socket.on('message', (data: any) => {
       console.log(data);
-
     });
 
     this.socketService.setSocket(this.socket);
   }
 }
-
