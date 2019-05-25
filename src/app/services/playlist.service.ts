@@ -1,22 +1,20 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from './../../environments/environment';
+import { Injectable } from '@angular/core';
+
+import { environment } from '@environment';
+import { Playlist } from 'src/types/Playlist';
 
 @Injectable()
 export class PlaylistService {
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
-
-  async getPlaylists() {
+  getPlaylists() {
     const url = `${environment.apiUrl}/playlists`;
     return this.http.get(url).toPromise();
   }
 
-
-  async importPlaylist(playlist) {
+  importPlaylist(playlist: Playlist) {
     const url = `${environment.apiUrl}/playlists/import`;
-    return this.http.post(url, { playlist }).toPromise();
+    return this.http.post(url, { playlistId: playlist.id }).toPromise();
   }
 }

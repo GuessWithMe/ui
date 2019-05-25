@@ -2,13 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Howl } from 'howler';
 import { MatSnackBar } from '@angular/material';
-import * as socketIo from 'socket.io-client';
 import FuzzySet from 'fuzzyset.js';
 
-import { environment } from '@environment';
 import { UserService, GameService, SocketService } from '@services';
 import { User, Guess, Word, Song } from '@t';
-
 
 @Component({
   selector: 'app-game',
@@ -31,17 +28,15 @@ export class GameComponent implements OnInit, OnDestroy {
   public isAutoplayDisabled = false;
 
   public guessAttemptForm = new FormGroup({
-    currentGuess: new FormControl(''),
+    currentGuess: new FormControl('')
   });
-
 
   constructor(
     private userService: UserService,
     private gameService: GameService,
     private socketService: SocketService,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {}
-
 
   async ngOnInit() {
     this.user = await this.userService.getUser();
@@ -63,14 +58,13 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     setInterval(() => {
-      if (this.timeLeft > 0 ) {
+      if (this.timeLeft > 0) {
         this.timeLeft = this.timeLeft - 1;
       }
     }, 1000);
 
     this.processAutoplayRestrictions();
   }
-
 
   ngOnDestroy() {
     // this.socketService.setSocket(null);
@@ -84,7 +78,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.sound.stop();
     }
   }
-
 
   /**
    * Initiates webosockets for controlling the game flow, incoming songs,
@@ -118,13 +111,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.socketService.setSocket(this.socket);
   }
 
-
   private prepareGuessArray(songData: object) {
     this.guess = {
       artist: [],
       title: [],
       artistCorrect: false,
-      titleCorrect: false,
+      titleCorrect: false
     };
 
     const artistStripped = this.removeParentheses(songData['artists'][0]['name']);
@@ -149,7 +141,6 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-
   public processIncomingSong(song: Song, timeLeft = this.timeToGuess): void {
     if (this.sound) {
       this.sound.stop();
@@ -172,7 +163,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
     this.sound.play();
   }
-
 
   public matchGuessInput() {
     const input = this.guessAttemptForm.value.currentGuess;
@@ -224,7 +214,6 @@ export class GameComponent implements OnInit, OnDestroy {
     this.checkIfTitleOrArtistDone();
   }
 
-
   public flashGreen() {
     this.flashGreenBool = true;
     this.flashRedBool = false;
@@ -233,7 +222,6 @@ export class GameComponent implements OnInit, OnDestroy {
       this.flashGreenBool = false;
     }, 600);
   }
-
 
   public flashRed() {
     this.flashRedBool = true;
@@ -244,9 +232,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }, 600);
   }
 
-
   public timesUp() {}
-
 
   public cleanUpWord(word): string {
     // Turn accented chars into normal chars.
@@ -258,11 +244,9 @@ export class GameComponent implements OnInit, OnDestroy {
     return word;
   }
 
-
   public removeParentheses(setOfWords: string): string {
     return setOfWords.replace(/ *\([^)]*\) */g, '');
   }
-
 
   private checkIfTitleOrArtistDone() {
     let titleIsDone = true;
@@ -281,7 +265,6 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     }
 
-
     let needsProgressUpdate = false;
     if (this.guess.artistCorrect !== artistIsDone) {
       this.guess.artistCorrect = artistIsDone;
@@ -293,12 +276,10 @@ export class GameComponent implements OnInit, OnDestroy {
       needsProgressUpdate = true;
     }
 
-
     if (needsProgressUpdate) {
       this.sendProgressUpdateToOtherPlayers();
     }
   }
-
 
   private sendProgressUpdateToOtherPlayers() {
     try {
@@ -306,13 +287,12 @@ export class GameComponent implements OnInit, OnDestroy {
         userId: this.user.id,
         spotifyUsername: this.user.spotifyUsername,
         titleCorrect: this.guess.titleCorrect,
-        artistCorrect: this.guess.artistCorrect,
+        artistCorrect: this.guess.artistCorrect
       });
     } catch (error) {
       console.log(error);
     }
   }
-
 
   /**
    * Sets a game on pause until a new song comes in.
@@ -328,11 +308,10 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
-
   public processAutoplayRestrictions() {
     if (this.sound && !this.sound.playing()) {
       this.isAutoplayDisabled = true;
-      const snackBarRef = this.snackBar.open('If there\'s no sound, hit the play button!', 'Play', {
+      const snackBarRef = this.snackBar.open("If there's no sound, hit the play button!", 'Play', {
         duration: 20000
       });
       snackBarRef.onAction().subscribe(() => {
@@ -342,4 +321,3 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 }
-

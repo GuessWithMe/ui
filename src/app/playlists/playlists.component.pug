@@ -2,19 +2,15 @@
   .row
     .col-12.col-md-6(*ngFor="let playlist of playlists")
       mat-card.d-flex.mb-4
-        .img-container(*ngIf="!playlist.imageUrl")
+        .img-container(*ngIf="!playlist.images[2]")
           .no-image-place
-        .img-container(*ngIf="playlist.imageUrl")
-          img(src="{{ playlist.imageUrl }}")
-          //- mat-divider
+        .img-container(*ngIf="playlist.images[2]")
+          img(src="{{ playlist.images[2].url }}")
         .div.ml-3.d-flex
           div
             h4.m-0 {{ playlist.name }}
             p.m-0 {{ playlist.tracks.total }} tracks
-
-          button(mat-flat-button color="primary") Import
-          //- button(mat-icon-button, color="primary", (click)="importPlaylist(element)")
-          //-   mat-icon import_export
+          button(mat-flat-button color="primary", (click)="importPlaylist(playlist)") Import
 
 
 
