@@ -5,19 +5,15 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 @Injectable()
 export class SocketService {
   private socketSource = new BehaviorSubject(null);
-  socket = this.socketSource.asObservable() as any;
+  socket = this.socketSource.asObservable();
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
-
-  public setSocket(socket) {
+  public setSocket(socket: SocketIOClient.Socket) {
     this.socketSource.next(socket);
   }
 
-
-  public getSocket(): any {
+  public getSocket(): SocketIOClient.Socket {
     return this.socketSource.value;
   }
 }

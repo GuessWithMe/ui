@@ -2,15 +2,19 @@
   .row
     .col-12.col-md-6(*ngFor="let playlist of playlists")
       mat-card.d-flex.mb-4
-        .img-container(*ngIf="!playlist.images[2]")
-          .no-image-place
-        .img-container(*ngIf="playlist.images[2]")
-          img(src="{{ playlist.images[2].url }}")
-        .div.ml-3.d-flex
-          div
-            h4.m-0 {{ playlist.name }}
-            p.m-0 {{ playlist.tracks.total }} tracks
-          button(mat-flat-button color="primary", (click)="importPlaylist(playlist)") Import
+        div.d-flex
+          .img-container(*ngIf="!playlist.images[2]")
+            .no-image-place
+          .img-container(*ngIf="playlist.images[2]")
+            img(src="{{ playlist.images[2].url }}")
+          .div.ml-3.d-flex
+            div
+              h4.m-0 {{ playlist.name }}
+              p.m-0 {{ playlist.tracks.total }} tracks
+            button.flex-center(mat-flat-button, color="primary", (click)="importPlaylist(playlist)") 
+              span(*ngIf="!progress[playlist.id]") Import
+              mat-progress-spinner(*ngIf="progress[playlist.id]", [mode]="mode", [value]="progress[playlist.id]", color="accent", diameter="20")
+
 
 
 

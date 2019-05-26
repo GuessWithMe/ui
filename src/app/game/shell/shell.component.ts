@@ -42,7 +42,7 @@ export class GameShellComponent implements OnInit {
     });
 
     this.socket.on('message', (data: any) => {
-      console.log(data);
+      // console.log(data);
     });
 
     this.socketService.setSocket(this.socket);
