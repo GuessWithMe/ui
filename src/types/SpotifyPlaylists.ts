@@ -1,4 +1,4 @@
-import { Tracks } from './Playlist';
+import { Tracks } from './SpotifyPlaylist';
 
 export interface SpotifyPlaylists {
   href: string;

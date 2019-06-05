@@ -1,4 +1,4 @@
-import { Tracks } from 'src/types/Playlist';
+import { Tracks } from 'src/types/SpotifyPlaylist';
 
 export interface PlaylistItem {
   name: string;

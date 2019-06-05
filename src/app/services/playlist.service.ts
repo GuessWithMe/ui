@@ -2,16 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '@environment';
-import { Playlist } from 'src/types/Playlist';
-import { SpotifyPlaylists } from 'src/types/SpotifyPlaylists';
+import { Playlist, SpotifyPlaylists } from '@t';
 
 @Injectable()
 export class PlaylistService {
   constructor(private http: HttpClient) {}
 
-  getPlaylists(): Promise<SpotifyPlaylists> {
+  getPlaylists() {
     const url = `${environment.apiUrl}/playlists`;
-    return this.http.get(url).toPromise() as Promise<SpotifyPlaylists>;
+    return this.http.get(url).toPromise() as Promise<{ playlists: Playlist[]; spotifyPlaylists: SpotifyPlaylists }>;
   }
 
   importPlaylist(playlist: Playlist) {
